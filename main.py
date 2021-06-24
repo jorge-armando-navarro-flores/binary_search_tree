@@ -76,7 +76,7 @@ class BinarySearchTree:
     while currentNode is not None:
       branch.append(currentNode.value)
       if value == currentNode.value:
-        return [branch, currentNode.value]
+        return [branch, currentNode.value, currentNode]
       elif value < currentNode.value:
         currentNode = currentNode.left
       else:
@@ -84,7 +84,19 @@ class BinarySearchTree:
     return None
 
   def remove(self, value):
-    pass
+    parentNode = None
+    currentNode = self.root
+
+    while currentNode.value != value:
+      if value < currentNode.value:
+        parentNode = currentNode
+        currentNode = currentNode.left
+      else:
+        parentNode = currentNode
+        currentNode = currentNode.right
+
+    return [parentNode.value, currentNode.value]
+        
 
 
 myBST = BinarySearchTree()
@@ -100,6 +112,7 @@ print(myBST.lookup(1))
 print(myBST.lookup(6))
 print(myBST.lookup(15))
 print(myBST.lookup(170))
+print(myBST.remove(6))
 
 
 
