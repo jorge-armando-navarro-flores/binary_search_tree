@@ -71,6 +71,8 @@ class BinarySearchTree:
           currentNode = currentNode.right
 
   def lookup(self, value):
+    if self.root.value == value:
+      return self.root.value
     branch = []
     currentNode = self.root
     while currentNode is not None:
@@ -95,7 +97,19 @@ class BinarySearchTree:
         parentNode = currentNode
         currentNode = currentNode.right
 
-    return [parentNode.value, currentNode.value]
+    # return [parentNode.value, currentNode.value]
+
+    if currentNode.right is not None:
+      currentNode = currentNode.right
+
+    currentNode = self.traversToLeft(currentNode)
+    return currentNode.value
+
+  def traversToLeft(self, node):
+    currentNode = node
+    while currentNode.left is not None:
+      currentNode = currentNode.left
+    return currentNode
         
 
 
@@ -112,7 +126,7 @@ print(myBST.lookup(1))
 print(myBST.lookup(6))
 print(myBST.lookup(15))
 print(myBST.lookup(170))
-print(myBST.remove(6))
+print(myBST.remove(9))
 
 
 
