@@ -1,44 +1,10 @@
-# class Node {
-#   constructor(value){
-#     this.left = null;
-#     this.right = null;
-#     this.value = value;
-#   }
-# }
-
-# class BinarySearchTree {
-#   constructor(){
-#     this.root = null;
-#   }
-#   insert(value){
-#     //Code here
-#   }
-#   lookup(value){
-#     //Code here
-#   }
-#   // remove
-# }
-
-# const tree = new BinarySearchTree();
-# tree.insert(9)
-# tree.insert(4)
-# tree.insert(6)
-# tree.insert(20)
-# tree.insert(170)
-# tree.insert(15)
-# tree.insert(1)
-# JSON.stringify(traverse(tree.root))
+# 
 
 # //     9
 # //  4     20
 # //1  6  15  170
 
-# function traverse(node) {
-#   const tree = { value: node.value };
-#   tree.left = node.left === null ? null : traverse(node.left);
-#   tree.right = node.right === null ? null : traverse(node.right);
-#   return tree;
-# }
+
 
 class Node:
   def __init__(self, value):
@@ -86,31 +52,69 @@ class BinarySearchTree:
     return None
 
   def remove(self, value):
-    parentNode = None
-    currentNode = self.root
+    if self.root is None:
+      return False
 
-    while currentNode.value != value:
+    currentNode = self.root
+    parentNode = None
+
+    while currentNode is not None:
       if value < currentNode.value:
         parentNode = currentNode
         currentNode = currentNode.left
-      else:
+      elif value > currentNode.value:
         parentNode = currentNode
         currentNode = currentNode.right
+      elif currentNode.value == value:
+        #We have a match, get to work
 
-    # return [parentNode.value, currentNode.value]
+        #option 1: no right child
+        if currentNode.right is None:
+          if parentNode is None:
+            self.root = currentNode.left
+          else:
+            #if parent > current value, make current left child a child of parent
+            if currentNode.value < parentNode.value:
+              parentNode.left = currentNode.left
+            elif currentNode.value > parentNode.value:
+              parentNode.right = currentNode.left
+        #option 2: Right child which doesn't have a left Child
+        elif currentNode.right.left is None:
+          currentNode.right.left = currentNode.left
+          if parentNode is None:
+            self.root = currentNode.right
+          else:
+            #if parrent > current, make right child of the left the parent
+            if currentNode.value < parentNode.value:
+              parentNode.left = currentNode.right
+            elif currentNode.value > parentNode.value:
+              parentNode.right = currentNode.right
 
-    if currentNode.right is not None:
-      currentNode = currentNode.right
+        #option 3 right child that has a left child
+        else:
+          #find the right child's left most Child
+          leftMost = currentNode.right.left
+          leftMostParent = currentNode.right
+          while leftMost.left is not None:
+            leftMostParent = leftMost
+            leftMost = leftMost.left
+          
+          #parent's left subtree is now leftmost's right subtree
+          leftMostParent.left = leftMost.right
+          leftMost.left = currentNode.left
+          leftMost.right = currentNode.right
 
-    currentNode = self.traversToLeft(currentNode)
-    return currentNode.value
+          if parentNode is None:
+            self.root = leftMost
+          else:
+            if currentNode.value < parentNode.value:
+              parentNode.left = leftMost
+            elif currentNode.value > parentNode.value:
+              parentNode.right = leftMost
+        return True
+    
 
-  def traversToLeft(self, node):
-    currentNode = node
-    while currentNode.left is not None:
-      currentNode = currentNode.left
-    return currentNode
-        
+    
 
 
 myBST = BinarySearchTree()
@@ -122,11 +126,13 @@ myBST.insert(20)
 myBST.insert(15)
 myBST.insert(170)
 
+myBST.remove(9)
 print(myBST.lookup(1))
 print(myBST.lookup(6))
 print(myBST.lookup(15))
 print(myBST.lookup(170))
-print(myBST.remove(9))
+
+
 
 
 
